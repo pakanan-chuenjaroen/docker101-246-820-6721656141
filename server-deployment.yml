@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      name: server-pods
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: imsuriyapi/todo-api:v5
+          env:
+            - name: MONGO_URL
+              value: mongodb://mongo-service:27017/todos
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service
+spec:
+  type: ClusterIP
+  selector:
+    app: server
+  ports:
+    - port: 80
+      targetPort: 80
